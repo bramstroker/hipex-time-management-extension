@@ -18,12 +18,17 @@
         "matches": [
             "https://service.hipex.io/*"
         ],
-        "js": ["helper.js","contentScript.js"]
+        "js": ["helper.js","contentScript.js"],
+        "css": ["contentStyle.css", "global_styling.css"]
         }
     ],
     "background": {
         "scripts": ["background.js"],
         "persistent": false
+    },
+    "options_ui": {
+        "page": "options_page.html",
+        "open_in_tab": false
     },
     "permissions": [
         "storage",

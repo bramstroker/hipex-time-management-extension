@@ -8,8 +8,6 @@ xhr.onreadystatechange = function() {
 }
 xhr.send();
 
-console.log(helper);
-
 function amount(item){
     return item.roundTime;
 } 
@@ -52,18 +50,24 @@ document.addEventListener("DOMContentLoaded", function() {
                 const hours = (msValue / 3600);
 
                 let addition = '';
-                let color = 'color:#08750c;';
+                let color = 'green';
                 if (hours > 8) {
-                    addition = `(+${hours - 8})`;
-                    color = 'color:#08750c;';
+                    addition = `+${hours - 8}`;
+                    color = 'green';
                 }
                 if (hours < 8) {
-                    addition = `(-${8 - hours})`;
-                    color = 'color:#d00;';
+                    addition = `-${8 - hours}`;
+                    color = 'red';
                 }
                 const RoundTime =  getTimeInQuarters(quarters).hours + getTimeInQuarters(quarters).quarters; //return the contents of the cell;
 
-                return `${value}<span style='margin-left:10px;'>(${RoundTime})</span><span style='${color}'>${addition}</span>`; 
+                return `
+                <span class="th-container">
+                    <span class="date-styling">${value}</span>
+                    <span class="time-styling"><i class="icon-time"></i> ${RoundTime}</span>
+                    <span class="addition-styling addition-styling-${color}">${addition}</span>
+                </span>
+                `; 
                 
             },
             columns:[
@@ -103,11 +107,33 @@ document.addEventListener("DOMContentLoaded", function() {
 
         const groups = table.getGroups();
         
-        const totalHours = document.querySelector('.total-hours')
+        const overviewTable = document.querySelector('.total-hours')
         const totalHoursSum = (response.data.map(amount).reduce(sum) / 3600);
-        const amountDays = (groups.length * 8); 
-        totalHours.textContent = `${totalHoursSum}/${amountDays} uur (${totalHoursSum - amountDays}) (${Math.floor((100 * totalHoursSum) / amountDays)}%)`;
-        welcomeText = `Hallo ${response.data[0].user.displayName} welkom!`;
+        const totalHours = (groups.length * 8); 
+        // totalHours.textContent = `${totalHoursSum}/${amountDays} uur (${totalHoursSum - amountDays}) (${Math.floor((100 * totalHoursSum) / amountDays)}%)`;
+        const sumHours = totalHoursSum - totalHours;
+        const percentage = Math.floor((100 * totalHoursSum) / totalHours);
+        overviewTable.innerHTML = `
+            <span class="overviewContainer">
+                <span class="overviewContainerRow">
+                    <span class="overview-title">Uren geschreven:</span>
+                    <span class="overview-content">${totalHoursSum} uur</span>
+                </span>
+                <span class="overviewContainerRow">
+                    <span class="overview-title">Totaal uren:</span>
+                    <span class="overview-content">${totalHours} uur</span>
+                </span>
+                <span class="overviewContainerRow">
+                    <span class="overview-title">${!!sumHours ? 'Overuren:' : 'Uren te weinig:'}</span>
+                    <span class="overview-content ${!!sumHours ? 'overview-content-positive' : 'overview-content-negative'}">${sumHours} uur</span>
+                </span>
+                <span class="overviewContainerRow">
+                    <span class="overview-title">Percentage:</span>
+                    <span class="overview-content ${percentage > 100 ? 'overview-title-positive' : 'overview-title-negative'}">${percentage}%</span>
+                </span>
+            </span>
+        `;
+        welcomeText = `Welkom ${response.data[0].user.displayName}!`;
         document.querySelector('.welcome').textContent = welcomeText;
     } else {
         welcomeText = `Log eerst in op https://service.hipex.io/`;
@@ -115,4 +141,12 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     
+    document.querySelector('.settings').addEventListener('click', function() {
+        if (chrome.runtime.openOptionsPage) {
+            chrome.runtime.openOptionsPage();
+        } else {
+            window.open(chrome.runtime.getURL('options.html'));
+        }
+    });
+
 });

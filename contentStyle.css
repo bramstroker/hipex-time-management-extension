@@ -1,0 +1,45 @@
+#time-management tr td {
+    background-color: white !important;
+}
+.tableRow { 
+    height: 26px;
+}
+.tableRowTd {
+    position:absolute;
+    left: 0;
+    right: 1px;
+} 
+
+.checkbox[for='billible'] + div {
+    width: auto !important;
+}
+.checkbox[for='billible'] + div select {
+    min-width: 300px !important;
+    width: 500px !important;
+}
+
+.control-label[for='ticket'] {
+    width: 50px !important;
+}
+select[name='ticket'] {
+    width: 100% !important;
+}
+
+.addition-styling {
+    padding: 0px 4px 0px 4px;
+    margin-top: 0px;
+}
+.additionSign {
+    display: inline-block;
+    font-size: 12px;
+    margin-right: 2px;
+}
+.th-container {
+    left:0;
+    border:1px solid #ddd;
+    height: 21px;
+    padding-top: 3px;
+}
+.date-styling {
+    width: 55px;
+}

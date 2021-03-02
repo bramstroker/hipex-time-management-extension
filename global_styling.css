@@ -1,0 +1,36 @@
+.addition-styling-red {
+    background-color:#FA603D;
+}
+.addition-styling-green {
+    background-color:#78CD51;
+}
+.addition-styling {
+    color: white !important;
+    border-radius: 4px;
+    position: absolute;
+    height: auto;
+    font-size: 10px;
+    box-sizing: border-box;
+    width: 40px;
+    text-align: center;
+}
+
+.th-container {
+    position: absolute;
+    right: 0;
+}
+
+.time-styling {
+    width: 70px;
+    margin-left: 10px;
+    display: inline-block;
+    margin-right: 10px;
+    border-right: 1px solid #ddd;
+    padding-right: 10px;
+}
+
+.date-styling {
+    margin-left: 10px;
+    display: inline-block;
+    border-right: 1px solid #ddd;
+}
