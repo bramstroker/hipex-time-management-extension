@@ -1,11 +1,15 @@
+let tableIsRendered = false;
 const isProcessingElement = document.querySelector('#DataTables_Table_0_processing');
-const observer = new MutationObserver(() => {
-    if (isProcessingElement.style.visibility ==='hidden') {
-        renderTable();
-    }
-})
-
+const observer = new MutationObserver(checkIfTableNeedsToBeRendered)
 observer.observe(isProcessingElement, { attributes: true })
+checkIfTableNeedsToBeRendered();
+
+function checkIfTableNeedsToBeRendered() {
+    if (!tableIsRendered && isProcessingElement.style.visibility ==='hidden') {
+        renderTable();
+        tableIsRendered = true;
+    }
+}
 
 function renderTable() {
     const tbody = document.querySelector('tbody');
