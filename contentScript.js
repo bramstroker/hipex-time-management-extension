@@ -78,6 +78,7 @@ function getTimeInHoursAndMinutes(seconds, dayValue) {
     let color = "grey";
     if (quarters > 32) {
         addition = `<span class="additionSign">+</span>${(quarters / 4) - 8}`;
+        color = `green`;
     }
     if (quarters < 32) {
         addition = `

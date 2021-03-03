@@ -32,7 +32,8 @@ document.addEventListener("DOMContentLoaded", function() {
           data: response.data,
           selectable: false,
           pagination: "local",
-          paginationSize: 50,
+          paginationSize: 100,
+          paginationSizeSelector: true,
           groupBy: function (data) {
             const day = getDay(data.startTime);
             const dayInTheWeek = getDayInTheWeek(data.startTime);

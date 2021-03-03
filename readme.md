@@ -10,3 +10,9 @@ there is also styling on the https://service.hipex.io/ page
 
 Happy developing
 
+
+
+TODO:
+
+- Wanneer je op zaterdag/zondag hebt gewerkt gaat er nog iets fout
+- soms moet je de pagina verversen om de styling goed door te krijgen
