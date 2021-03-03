@@ -29,84 +29,127 @@ document.addEventListener("DOMContentLoaded", function() {
     if (response) {
 
         var table = new Tabulator("#hours-table", {
-            data:response.data,
-            selectable:false,
-            groupBy:function(data){
+          data: response.data,
+          selectable: false,
+          pagination: "local",
+          paginationSize: 50,
+          groupBy: function (data) {
+            const day = getDay(data.startTime);
+            const dayInTheWeek = getDayInTheWeek(data.startTime);
+            const month = getMonth(data.startTime);
 
-                const day = getDay(data.startTime);
-                const dayInTheWeek = getDayInTheWeek(data.startTime);
-                const month = getMonth(data.startTime);
+            return `${helper.DAYS_SHORT[dayInTheWeek]} ${day}-${helper.MONTHS_SHORT[month]}`;
+          },
+          groupHeader: function (value, count, data, group) {
+            const msValue = data.map(amount).reduce(sum);
+            const quarters = msValue / 900;
 
-                return `${helper.DAYS_SHORT[dayInTheWeek]} ${day}-${helper.MONTHS_SHORT[month]}`;
-            },
-            groupHeader:function(value, count, data, group){
-                const msValue = data.map(amount).reduce(sum);
-                const quarters = msValue / 900
+            function getTimeInQuarters(quarters) {
+              const showQuarters =
+                quarters % 4 ? "," + (quarters % 4) * 25 + " uur" : " uur";
+              const showHours = Math.floor(quarters / 4)
+                ? Math.floor(quarters / 4)
+                : "0";
+              return {
+                hours: showHours,
+                quarters: showQuarters,
+              };
+            }
+            const hours = msValue / 3600;
 
-                function getTimeInQuarters(quarters) {
-                    const showQuarters = quarters % 4 ? ',' + ((quarters % 4) * 25) + ' uur' : ' uur';
-                    const showHours = Math.floor(quarters/4) ? Math.floor(quarters/4) : '0';
-                    return {
-                        hours: showHours,
-                        quarters: showQuarters
-                    }
-                }
-                const hours = (msValue / 3600);
+            let addition = "-";
+            let color = "grey";
+            if (hours > 8) {
+              addition = `+${hours - 8}`;
+              color = "green";
+            }
+            if (hours < 8) {
+              addition = `-${8 - hours}`;
+              color = "red";
+            }
+            const RoundTime =
+              getTimeInQuarters(quarters).hours +
+              getTimeInQuarters(quarters).quarters; //return the contents of the cell;
 
-                let addition = "-";
-                let color = "grey";
-                if (hours > 8) {
-                    addition = `+${hours - 8}`;
-                    color = 'green';
-                }
-                if (hours < 8) {
-                    addition = `-${8 - hours}`;
-                    color = 'red';
-                }
-                const RoundTime =  getTimeInQuarters(quarters).hours + getTimeInQuarters(quarters).quarters; //return the contents of the cell;
-
-                return `
+            return `
                 <span class="th-container">
                     <span class="date-styling">${value}</span>
                     <span class="time-styling"><i class="icon-time"></i> ${RoundTime}</span>
                     <span class="addition-styling addition-styling-${color}">${addition}</span>
                 </span>
-                `; 
-                
+                `;
+          },
+          columns: [
+            {
+              title: "Dag",
+              field: "startTime",
+              width: 100,
+              formatter: function (cell) {
+                const day = getDay(cell.getValue());
+                const dayInTheWeek = getDayInTheWeek(cell.getValue());
+                const month = getMonth(cell.getValue());
+                return `${helper.DAYS_SHORT[dayInTheWeek]} ${day}-${helper.MONTHS_SHORT[month]}`;
+              },
             },
-            columns:[
-                {title:"Dag", field:"startTime", width:100, formatter:function(cell) {
-                    const day = getDay(cell.getValue());
-                    const dayInTheWeek = getDayInTheWeek(cell.getValue());
-                    const month = getMonth(cell.getValue());
-                    return `${helper.DAYS_SHORT[dayInTheWeek]} ${day}-${helper.MONTHS_SHORT[month]}`;
-                },
-                },
-                {title:"Begin", field:"startTime", width:60, headerSort:false, hozAlign:"center", formatter:function(cell){
-                    const time = new Date(cell.getValue()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});                
-                    return `${time}`;
-                    },
-                },
-                {title:"Eind", field:"endTime", width:60, headerSort:false, hozAlign:"center", formatter:function(cell){
-                    const time = new Date(cell.getValue()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});                
-                    return `${time}`;
-                    },
-                },
-                {title:"Tijd afgerond", field:"roundTime", width:140, hozAlign:"center", formatter:function(cell, formatterParams, onRendered){
-                    const quarters = cell.getValue() / 900
-                    const showQuarters = quarters % 4 ? ',' + ((quarters % 4) * 25) + ' uur' : ' uur';
-                    const showHours = Math.floor(quarters/4) ? Math.floor(quarters/4) : '0';
-                    return showHours + showQuarters; //return the contents of the cell;
-                    },
-                },
-                {title:"Omschrijving", field:"description"}, 
-                {title:"project", field:"customer", headerSort:false, formatter:function(cell) {
-                    return cell.getValue().name;
-                },
-                },
-                {title:'TicketNr', field:"ticket", width:100, headerSort: false}
-            ]
-            
+            {
+              title: "Begin",
+              field: "startTime",
+              width: 60,
+              headerSort: false,
+              hozAlign: "center",
+              formatter: function (cell) {
+                const time = new Date(cell.getValue()).toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                });
+                return `${time}`;
+              },
+            },
+            {
+              title: "Eind",
+              field: "endTime",
+              width: 60,
+              headerSort: false,
+              hozAlign: "center",
+              formatter: function (cell) {
+                const time = new Date(cell.getValue()).toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                });
+                return `${time}`;
+              },
+            },
+            {
+              title: "Tijd afgerond",
+              field: "roundTime",
+              width: 140,
+              hozAlign: "center",
+              formatter: function (cell, formatterParams, onRendered) {
+                const quarters = cell.getValue() / 900;
+                const showQuarters =
+                  quarters % 4 ? "," + (quarters % 4) * 25 + " uur" : " uur";
+                const showHours = Math.floor(quarters / 4)
+                  ? Math.floor(quarters / 4)
+                  : "0";
+                return showHours + showQuarters; //return the contents of the cell;
+              },
+            },
+            { title: "Omschrijving", field: "description" },
+            {
+              title: "project",
+              field: "customer",
+              headerSort: false,
+              formatter: function (cell) {
+                return cell.getValue().name;
+              },
+            },
+            {
+              title: "TicketNr",
+              field: "ticket",
+              width: 100,
+              headerSort: false,
+            },
+          ],
         });
 
         const groups = table.getGroups();
