@@ -59,8 +59,8 @@ function getTimeInHoursAndMinutes(seconds, dayValue) {
     // console.log('quarters', quarters);
     // console.log('quarters/4', quarters / 4);
 
-    let addition = '';
-    let color = 'green';
+    let addition = "-";
+    let color = "grey";
     if (quarters > 32) {
         addition = `<span class="additionSign">+</span>${(quarters / 4) - 8}`;
     }

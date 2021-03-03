@@ -4,6 +4,9 @@
 .addition-styling-green {
     background-color:#78CD51;
 }
+.addition-styling-grey {
+    background-color:#aaa;
+}
 .addition-styling {
     color: white !important;
     border-radius: 4px;
