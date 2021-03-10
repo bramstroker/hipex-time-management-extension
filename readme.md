@@ -14,5 +14,10 @@ Happy developing
 
 TODO:
 
-- Wanneer je op zaterdag/zondag hebt gewerkt gaat er nog iets fout
-- soms moet je de pagina verversen om de styling goed door te krijgen
+- [x] ~~Wanneer je op zaterdag/zondag hebt gewerkt gaat er nog iets fout~~
+- [x] ~~soms moet je de pagina verversen om de styling goed door te krijgen~~
+- [ ] Toevoegen hoeveel uur je werkt + hoeveel dagen
+- [ ] Live uren erbij tellen (wanneer de teller nog loopt)
+- [ ] Optie maken om te kunnen kiezen tussen afgerond of niet afgeronde uren
+- [ ] Uren invoeren via de extensie (Nice to have)
+- [ ] Tabel stijlen (Nice to have)

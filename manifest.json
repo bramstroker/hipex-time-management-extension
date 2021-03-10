@@ -1,39 +1,38 @@
 {
-    "manifest_version": 2,
+  "manifest_version": 2,
 
-    "name": "Emico time management tool",
-    "description": "Deze extensie maakt de time management tool overzichtelijker",
-    "version": "1.0",
-    "icons": {
-        "16": "hipex.png",
-        "128": "hipex.png"
-    },
-    "browser_action": {
-        "default_icon": "hipex.png",
-        "default_title": "Emico Time management tool",
-        "default_popup": "popup.html"
-    },
-    "content_scripts": [
-        {
-        "matches": [
-            "https://service.hipex.io/*"
-        ],
-        "js": ["helper.js","contentScript.js"],
-        "css": ["contentStyle.css", "global_styling.css"]
-        }
-    ],
-    "background": {
-        "scripts": ["background.js"],
-        "persistent": false
-    },
-    "options_ui": {
-        "page": "options_page.html",
-        "open_in_tab": false
-    },
-    "permissions": [
-        "storage",
-        "activeTab",
-        "https://service.hipex.io/"
-      ]
-
+  "name": "Emico time management tool",
+  "description": "Deze extensie maakt de time management tool overzichtelijker",
+  "version": "2.0",
+  "icons": {
+    "16": "hipex.png",
+    "128": "hipex.png"
+  },
+  "browser_action": {
+    "default_icon": "hipex.png",
+    "default_title": "Emico Time management tool",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://service.hipex.io/*"],
+      "js": ["helper.js", "contentScript.js"],
+      "css": ["contentStyle.css", "global_styling.css"]
+    }
+  ],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": true
+  },
+  "options_ui": {
+    "page": "options_page.html",
+    "open_in_tab": false
+  },
+  "permissions": [
+    "storage",
+    "webRequest",
+    "<all_urls>",
+    "activeTab",
+    "https://service.hipex.io/"
+  ]
 }

@@ -3,13 +3,14 @@ function save_options() {
     const hide_discount = document.getElementById('hide_discount').checked;
     const hide_visible = document.getElementById('hide_visible').checked;
     const hide_billable = document.getElementById('hide_billable').checked;
-    console.log(hide_discount);
-    console.log(hide_visible);
-    console.log(hide_billable);
+    // const workingHours = document.getElementById('workingHours').selectedOptions[0].value;
+    // const workingDays = document.getElementById('workingDays').selectedOptions[0].value;
     chrome.storage.local.set({
         hide_discount: hide_discount,
         hide_visible: hide_visible,
-        hide_billable: hide_billable
+        hide_billable: hide_billable,
+        // workingHours: workingHours,
+        // workingDays: workingDays
     }, function() {
       // Update status to let user know options were saved.
       var status = document.getElementById('status');
@@ -27,12 +28,16 @@ function save_options() {
     chrome.storage.local.get({
         hide_discount,
         hide_visible,
-        hide_billable
+        hide_billable,
+        // workingHours,
+        // workingDays
     }, function(items) {
         console.log(items);
         document.getElementById('hide_discount').checked = items.hide_discount;
         document.getElementById('hide_visible').checked = items.hide_visible;
         document.getElementById('hide_billable').checked = items.hide_billable;
+        // document.getElementById('workingHours').value = items.workingHours;
+        // document.getElementById('workingDays').value = items.workingDays;
     });
   }
   document.addEventListener('DOMContentLoaded', restore_options);

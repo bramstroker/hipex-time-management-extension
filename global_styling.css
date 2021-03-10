@@ -7,6 +7,7 @@
 .addition-styling-grey {
     background-color:#aaa;
 }
+
 .addition-styling {
     color: white !important;
     border-radius: 4px;
@@ -36,4 +37,54 @@
     margin-left: 10px;
     display: inline-block;
     border-right: 1px solid #ddd;
+}
+
+
+.overviewContainer {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+}
+.overview-title {
+    font-size: 12px;
+}
+.overview-title-negative, .overview-content-negative {
+    background-color:#FA603D;
+    padding: 4px;
+    border-radius: 4px;
+    color: white;
+}
+.overview-title-positive, .overview-content-positive {
+    background-color: #78CD51;
+    padding: 4px;
+    border-radius: 4px;
+    color: white;
+}
+.overview-content {
+    font-size: 12px;
+    font-weight: 400;
+}
+.overviewContainerRow {
+    display: inline;
+    width: auto;
+    margin-right: 20px;
+}
+.total-hours {
+    background-color: #ddd;
+    border-radius: 5px;
+    padding: 0px 10px 4px 10px;
+}
+.additionSign {
+    color: white !important;
+    font-size: 12px;
+    margin-right: 2px;
+}
+.addition-styling {
+    padding: 0px 4px 0px 4px;
+    margin-top: 0px;
+    margin-left: 0 !important;
+}
+.addition-styling span {
+    color: white !important;
+    margin-left: 0 !important;
 }

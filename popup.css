@@ -18,43 +18,10 @@ body {
     width: 75px;
 }
 
-.overviewContainer {
-    display: flex;
-    width: 100%;
-    flex-direction: row;
-}
-.overview-title {
-    font-size: 12px;
-}
-.overview-title-negative, .overview-content-negative {
-    background-color:#FA603D;
-    padding: 4px;
-    border-radius: 4px;
-    color: white;
-}
-.overview-title-positive, .overview-content-positive {
-    background-color: #78CD51;
-    padding: 4px;
-    border-radius: 4px;
-    color: white;
-}
-.overview-content {
-    font-size: 12px;
-    font-weight: 400;
-}
-.overviewContainerRow {
-    display: inline;
-    width: auto;
-    margin-right: 20px;
-}
-.total-hours {
-    background-color: #ddd;
-    padding: 0px 10px 4px 10px;
-}
 .settings {
     position: absolute;
-    right: 21px;
-    top: 21px;
+    right: 10px;
+    top: 10px;
     font-size: 21px;
     color: grey;
     border-radius: 100%;
@@ -64,4 +31,26 @@ body {
     text-align: center;
     background-color: #ffffff;
     cursor: pointer;
+    transition: transform .3s ease-in-out .3s;
+}
+.settings:hover {
+    transform: rotate(90deg);
+    color: #656363;
+}
+
+.addition-styling {
+    color: white !important;
+}
+
+.dateSelector {
+    display: flex;
+    flex-direction: row;
+    padding: 10px 0 0 0;
+}
+.yearSelectorContainer {
+    margin-right: 10px;
+}
+
+.total-hours {
+    margin-top: 0;
 }
