@@ -54,6 +54,20 @@ const helper = {
       quarters: showQuarters,
     };
   },
+  setMinutesToHoursAndMinutes(n) {
+    var num = n;
+    var hours = num / 60;
+    var rhours = Math.floor(hours);
+    var minutes = (hours - rhours) * 60;
+    var rminutes = Math.round(minutes);
+
+    retHours = rhours > 0 ? `${rhours}:` : `0:`;
+    const leadingZeroMinute = "0000" + rminutes;
+
+    return `${retHours}${leadingZeroMinute.substr(
+      leadingZeroMinute.length - 2
+    )}`;
+  },
   getQuarters(seconds) {
     return Math.floor(seconds / 900);
   },
@@ -61,26 +75,26 @@ const helper = {
     let addition = "-";
     let showAddition = true;
     let color = "grey";
-    const quarters = helper.getQuarters(seconds);
-    if (quarters > 32) {
-      addition = `<span class="additionSign">+</span>${quarters / 4 - 8}`;
+    const minutes = seconds / 60;
+    if (minutes > 480) {
+      const remainingMinutes = minutes - 480;
+      addition = `<span class="additionSign">+</span>${helper.setMinutesToHoursAndMinutes(
+        remainingMinutes
+      )}`;
       color = `green`;
     }
-    if (quarters < 32) {
-      addition = `
-            <span class="additionSign">-</span>${8 - quarters / 4}
-        `;
+    if (minutes < 480) {
+      // addition = `<span class="additionSign">-</span>${8 - quarters / 4}`;
+      const remainingMinutes = 480 - minutes;
+      addition = `<span class="additionSign">-</span>${helper.setMinutesToHoursAndMinutes(
+        remainingMinutes
+      )}`;
       color = `red`;
     }
-    if (quarters === 32) {
+    if (minutes === 480) {
       showAddition = false;
     }
-    const RoundTime = `
-        ${
-          helper.getTimeInQuartersFormat(seconds).hours +
-          helper.getTimeInQuartersFormat(seconds).quarters
-        } 
-    `;
+    const RoundTime = helper.setMinutesToHoursAndMinutes(minutes);
 
     return `
     <th class="th-container">
@@ -91,21 +105,28 @@ const helper = {
               helper.MONTHS_LONG[dayValue.split("-")[1]]
             }</span>
             <span class="time-styling"><i class="icon-time"></i> ${RoundTime}</span>
-            <span class="addition-styling addition-styling-${color}" ${!showAddition ? 'style="display:none;"' : ''}>${addition}</span>
+            <span class="addition-styling addition-styling-${color}" ${
+      !showAddition ? 'style="display:none;"' : ""
+    }>${addition}</span>
         </span>                
     </th>`;
   },
-  amount(item){
-    return item.roundTime;
+  amount(item) {
+    return item.time;
   },
-  sum(prev, next){
+  sum(prev, next) {
     return prev + next;
   },
-  getDay(value) { return new Date(value).getDate(); },
-  getDayInTheWeek(value) { return new Date(value).getDay(); },
-  getMonth(value) { return new Date(value).getMonth(); },
+  getDay(value) {
+    return new Date(value).getDate();
+  },
+  getDayInTheWeek(value) {
+    return new Date(value).getDay();
+  },
+  getMonth(value) {
+    return new Date(value).getMonth();
+  },
   createOverview(totalHoursSum, totalHours, sumHours, percentage) {
-    console.log(sumHours);
     return `
             <span class="overviewContainer">
                 <span class="overviewContainerRow">
@@ -118,13 +139,13 @@ const helper = {
                 </span>
                 <span class="overviewContainerRow">
                     <span class="overview-title">${
-                      sumHours > 0 ? "Overuren:" : "Uren te weinig:"
+                      sumHours.result == 'positive' ? "Overuren:" : "Uren te weinig:"
                     }</span>
                     <span class="overview-content ${
-                      sumHours > 0
+                      sumHours.result == 'positive'
                         ? "overview-content-positive"
                         : "overview-content-negative"
-                    }">${sumHours} uur</span>
+                    }">${sumHours.calculation} uur</span>
                 </span>
                 <span class="overviewContainerRow">
                     <span class="overview-title">Percentage:</span>
@@ -139,17 +160,17 @@ const helper = {
   },
   getAllData() {
     var xhr = new XMLHttpRequest();
-    const url = 'https://service.hipex.io/time/data?';
+    const url = "https://service.hipex.io/time/data?";
     xhr.open(
       "GET",
       `${url}sEcho=1&iColumns=9&sColumns=&iDisplayStart=0&iDisplayLength=-1&mDataProp_0=__edit&mDataProp_1=startTime&mDataProp_2=endTime&mDataProp_3=time&mDataProp_4=roundTime&mDataProp_5=customer.__string&mDataProp_6=childCustomer.name&mDataProp_7=ticket&mDataProp_8=description&sSearch=&bRegex=false&sSearch_0=&bRegex_0=false&bSearchable_0=true&sSearch_1=&bRegex_1=false&bSearchable_1=true&sSearch_2=&bRegex_2=false&bSearchable_2=true&sSearch_3=&bRegex_3=false&bSearchable_3=true&sSearch_4=&bRegex_4=false&bSearchable_4=true&sSearch_5=&bRegex_5=false&bSearchable_5=true&sSearch_6=&bRegex_6=false&bSearchable_6=true&sSearch_7=&bRegex_7=false&bSearchable_7=true&sSearch_8=&bRegex_8=false&bSearchable_8=true&iSortCol_0=1&sSortDir_0=desc&iSortingCols=1&bSortable_0=false&bSortable_1=true&bSortable_2=true&bSortable_3=false&bSortable_4=false&bSortable_5=true&bSortable_6=true&bSortable_7=true&bSortable_8=true`,
       true
     );
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState == 4) {
-            window.localStorage.setItem('HOURS', xhr.responseText)
-        }
-    }
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState == 4) {
+        window.localStorage.setItem("HOURS", xhr.responseText);
+      }
+    };
     xhr.send();
   }
 

@@ -25,20 +25,22 @@ function save_options() {
   // stored in chrome.storage.
   function restore_options() {
     // Use default value color = 'red' and likesColor = true.
-    chrome.storage.local.get({
+    chrome.storage.local.get(
+      {
         hide_discount,
         hide_visible,
         hide_billable,
         // workingHours,
         // workingDays
-    }, function(items) {
-        console.log(items);
-        document.getElementById('hide_discount').checked = items.hide_discount;
-        document.getElementById('hide_visible').checked = items.hide_visible;
-        document.getElementById('hide_billable').checked = items.hide_billable;
+      },
+      function (items) {
+        document.getElementById("hide_discount").checked = items.hide_discount;
+        document.getElementById("hide_visible").checked = items.hide_visible;
+        document.getElementById("hide_billable").checked = items.hide_billable;
         // document.getElementById('workingHours').value = items.workingHours;
         // document.getElementById('workingDays').value = items.workingDays;
-    });
+      }
+    );
   }
   document.addEventListener('DOMContentLoaded', restore_options);
   document.getElementById('save').addEventListener('click',

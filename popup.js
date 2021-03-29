@@ -52,14 +52,34 @@ function setMonthSelector(silent) {
   }
 }
 function getWorkedHours() {
-  const workedHours = helper.year[helper.activeYear][helper.activeMonth]['workedMs'] / 3600;
+  
+  const workedHours = helper.setMinutesToHoursAndMinutes(
+    helper.year[helper.activeYear][helper.activeMonth]["workedMs"] / 60
+  );
+  
   return workedHours;
 }
 function getHourBalance() {
   const totalHours = helper.year[helper.activeYear][helper.activeMonth]['totalHours'] * 8;
-  const workedHours = helper.year[helper.activeYear][helper.activeMonth]['workedMs'] / 3600;
-  const calculation = (workedHours - totalHours);
-  return calculation
+  const totalMinutes = totalHours * 60;
+  const workedMs =
+    helper.year[helper.activeYear][helper.activeMonth]["workedMs"] / 60;
+
+  let calculation = 0;
+  let result = "";
+
+  if (totalMinutes > workedMs) {
+    calculation = totalMinutes - workedMs;
+    result = "negative";
+  } else {
+    calculation = workedMs - totalMinutes;
+    result = "positive";
+  }
+
+  return {
+    calculation: helper.setMinutesToHoursAndMinutes(calculation),
+    result: result,
+  }; 
 }
 function getTotalHours() {
   const totalHours = helper.year[helper.activeYear][helper.activeMonth]['totalHours'] * 8
@@ -110,8 +130,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (dayOfTheWeek < 6) {
       uniqueDays[day] = 8;
     }
-    console.log(uniqueDays);
-    helper.year[year][month]['workedMs'] += data.roundTime;
+    helper.year[year][month]["workedMs"] += data.time;
     helper.year[year][month]['totalHours'] = Object.keys(uniqueDays).length;
     helper.year[year][month][day].push(data);
     helper.year[year][month]['_children'].push(data)
@@ -131,11 +150,11 @@ document.addEventListener("DOMContentLoaded", function () {
   let welcomeText = "";
   if (helper.year) {
     helper.table = new Tabulator("#hours-table", {
-      data: helper.year[helper.activeYear][helper.activeMonth]['_children'],
+      data: helper.year[helper.activeYear][helper.activeMonth]["_children"],
       selectable: false,
       dataTree: true,
-      layout:"fitDataStretch",
-      layoutColumnsOnNewData:true,
+      layout: "fitDataStretch",
+      layoutColumnsOnNewData: true,
       pagination: "local",
       paginationSize: 100,
       paginationSizeSelector: true,
@@ -161,7 +180,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const day = helper.getDay(cell.getValue());
             const dayInTheWeek = helper.getDayInTheWeek(cell.getValue());
             const month = helper.getMonth(cell.getValue());
-            return `${helper.DAYS_SHORT[dayInTheWeek]} ${day}-${month+1}`;
+            return `${helper.DAYS_SHORT[dayInTheWeek]} ${day}-${month + 1}`;
           },
         },
         {
@@ -207,7 +226,7 @@ document.addEventListener("DOMContentLoaded", function () {
             return showHours + showQuarters; //return the contents of the cell;
           },
         },
-        { title: "Omschrijving", field: "description" },
+        { title: "Omschrijving", field: "description", maxWidth: 150 },
         {
           title: "project",
           field: "customer",

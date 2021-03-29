@@ -34,45 +34,49 @@ function renderTable() {
 
 
 
-    for (let i = 0; i < rows.length; i++) {
+    for (let i = 0; i < rows.length - 1; i++) {
+      const from = rows[i].children[1];
+      const till = rows[i].children[2];
+      let amountOfHours,
+        amountOfSeconds = 0;
+      if (rows[i].children[3]) {
+        amountOfHours =
+          parseInt(rows[i].children[3].innerText.split(":")[0]) * 60 * 60;
+        amountOfSeconds =
+          parseInt(rows[i].children[3].innerText.split(":")[1]) * 60;
+      }
 
-        if (document.querySelector('total-hours')) {
-            document.querySelector('total-hours').remove();
-        }
+      const totalOfSeconds = amountOfHours + amountOfSeconds;
+      let dayOfRow = "";
+      let monthOfRow = "";
+      let dayMonthValue = "";
+      dayOfRow = new Date(from.innerText).getDate();
+      monthOfRow = new Date(from.innerText).getMonth();
+      dayMonthValue = `${dayOfRow}-${monthOfRow}`;
 
-        const from = rows[i].children[1];
-        const till = rows[i].children[2];
-        // console.log(rows[i].children[3]);
-        let amountOfHours, amountOfSeconds = 0;
-        if (rows[i].children[3]) {
-          amountOfHours = parseInt(rows[i].children[3].innerText.split(":")[0]) * 60 * 60;
-          amountOfSeconds = parseInt(rows[i].children[3].innerText.split(":")[1]) * 60;
-        }
-        
-        const totalOfSeconds = amountOfHours + amountOfSeconds;
-
-        const dayOfRow = new Date(from.innerText).getDate();
-        const monthOfRow = new Date(from.innerText).getMonth();
-        const dayMonthValue = `${dayOfRow}-${monthOfRow}`
-
-        const preTableRow = document.createElement('tr');
-        const preTableRowTd = document.createElement('th');
-        preTableRowTd.classList.add('info-table')
-        preTableRow.classList.add('tableRow');
-        preTableRow.setAttribute('data-day', dayMonthValue);
-        preTableRowTd.classList.add('tableRowTd');
-        preTableRow.appendChild(preTableRowTd);
-        if (dayTotal[dayMonthValue] === undefined) {
-            dayTotal[dayMonthValue] = 0;
-        }
-        dayTotal[dayMonthValue] += totalOfSeconds;
-        if (!days.find((value) => value === dayMonthValue)) {
-            tbody.insertBefore(preTableRow, rows[i]);
-            days.push(dayMonthValue);
-        }
-        
-        from.innerText = new Date(from.innerText).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});                
-        till.innerText = new Date(till.innerText).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});                
+      const preTableRow = document.createElement("tr");
+      const preTableRowTd = document.createElement("th");
+      preTableRowTd.classList.add("info-table");
+      preTableRow.classList.add("tableRow");
+      preTableRow.setAttribute("data-day", dayMonthValue);
+      preTableRowTd.classList.add("tableRowTd");
+      preTableRow.appendChild(preTableRowTd);
+      if (dayTotal[dayMonthValue] === undefined) {
+        dayTotal[dayMonthValue] = 0;
+      }
+      dayTotal[dayMonthValue] += totalOfSeconds;
+      if (!days.find((value) => value === dayMonthValue)) {
+        tbody.insertBefore(preTableRow, rows[i]);
+        days.push(dayMonthValue);
+      }
+      from.innerText = new Date(from.innerText).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+      till.innerText = new Date(till.innerText).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
     }
 
     const rowDays = document.querySelectorAll("[data-day]");
