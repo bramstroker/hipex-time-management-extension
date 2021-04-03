@@ -1,6 +1,5 @@
 {
-  "manifest_version": 3,
-
+  "manifest_version": 2,
   "name": "Emico time management tool",
   "description": "Deze extensie maakt de time management tool overzichtelijker",
   "version": "3.0",
