@@ -95,6 +95,15 @@ const helper = {
       showAddition = false;
     }
     const RoundTime = helper.setMinutesToHoursAndMinutes(minutes);
+    const today = new Date(
+      `${helper.activeYear}-${parseInt(dayValue.split("-")[1]) + 1}-${
+        dayValue.split("-")[0]
+      }`
+    );
+    console.log('dayValue.split("-")[0]: Dag', dayValue.split("-")[0]);
+    console.log('dayValue.split("-")[1]: Maand', dayValue.split("-")[1]);
+    console.log("today", today);
+    const dayOfTheWeek = helper.getDayInTheWeek(today);
 
     return `
     <th class="th-container">
@@ -106,7 +115,7 @@ const helper = {
             }</span>
             <span class="time-styling"><i class="icon-time"></i> ${RoundTime}</span>
             <span class="addition-styling addition-styling-${color}" ${
-      !showAddition ? 'style="display:none;"' : ""
+      !showAddition | (dayOfTheWeek >= 6) ? 'style="display:none;"' : ""
     }>${addition}</span>
         </span>                
     </th>`;
@@ -139,10 +148,12 @@ const helper = {
                 </span>
                 <span class="overviewContainerRow">
                     <span class="overview-title">${
-                      sumHours.result == 'positive' ? "Overuren:" : "Uren te weinig:"
+                      sumHours.result == "positive"
+                        ? "Overuren:"
+                        : "Uren te weinig:"
                     }</span>
                     <span class="overview-content ${
-                      sumHours.result == 'positive'
+                      sumHours.result == "positive"
                         ? "overview-content-positive"
                         : "overview-content-negative"
                     }">${sumHours.calculation} uur</span>
@@ -150,7 +161,7 @@ const helper = {
                 <span class="overviewContainerRow">
                     <span class="overview-title">Percentage:</span>
                     <span class="overview-content ${
-                      percentage > 100
+                      percentage >= 100
                         ? "overview-title-positive"
                         : "overview-title-negative"
                     }">${percentage}%</span>

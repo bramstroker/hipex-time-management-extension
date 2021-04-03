@@ -1,4 +1,4 @@
-helper.getAllData();
+helper.getAllData(); 
 
 function setActiveYear(e) {
   helper.activeYear = e.target.value;
@@ -60,7 +60,7 @@ function getWorkedHours() {
   return workedHours;
 }
 function getHourBalance() {
-  const totalHours = helper.year[helper.activeYear][helper.activeMonth]['totalHours'] * 8;
+  const totalHours = helper.year[helper.activeYear][helper.activeMonth]['totalHours'];
   const totalMinutes = totalHours * 60;
   const workedMs =
     helper.year[helper.activeYear][helper.activeMonth]["workedMs"] / 60;
@@ -82,12 +82,14 @@ function getHourBalance() {
   }; 
 }
 function getTotalHours() {
-  const totalHours = helper.year[helper.activeYear][helper.activeMonth]['totalHours'] * 8
+  const totalHours =
+    helper.year[helper.activeYear][helper.activeMonth]["totalHours"];
+  console.log(helper.year[helper.activeYear][helper.activeMonth]);
   return totalHours;
 }
 function getPercentage() {
   const workedHours = helper.year[helper.activeYear][helper.activeMonth]['workedMs'] / 3600;
-  const totalHours = helper.year[helper.activeYear][helper.activeMonth]['totalHours'] * 8;
+  const totalHours = helper.year[helper.activeYear][helper.activeMonth]['totalHours']; // todo
   const percentage = Math.floor((100 * workedHours) / totalHours);
   return percentage;
 }
@@ -100,6 +102,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const response = JSON.parse(window.localStorage.getItem("HOURS"));
   const uniqueDays = {};
+
+  console.log(response);
 
   const structuredResponse = response.data.map(function (data) {
     const year = new Date(data.startTime).getUTCFullYear();
@@ -115,25 +119,33 @@ document.addEventListener("DOMContentLoaded", function () {
     if (helper.year[year][month][day] === undefined) {
       helper.year[year][month][day] = [];
     }
-    if (helper.year[year][month]['_children'] === undefined) {
-      helper.year[year][month]['_children'] = [];
+    if (helper.year[year][month]["_children"] === undefined) {
+      helper.year[year][month]["_children"] = [];
     }
-    if (helper.year[year][month]['workedMs'] === undefined) {
-      helper.year[year][month]['workedMs'] = 0;
+    if (helper.year[year][month]["workedMs"] === undefined) {
+      helper.year[year][month]["workedMs"] = 0;
     }
-    if (helper.year[year][month]['totalHours'] === undefined) {
-      helper.year[year][month]['totalHours'] = 0;
+    if (helper.year[year][month]["totalHours"] === undefined) {
+      helper.year[year][month]["totalHours"] = 0;
     }
-    if (uniqueDays[day] === undefined) {
-      uniqueDays[day] = 0;
+    if (helper.year[year][month]['workdays'] === undefined) {
+      helper.year[year][month]['workdays'] = 0;
     }
-    if (dayOfTheWeek < 6) {
-      uniqueDays[day] = 8;
+    if (uniqueDays[year] === undefined) {
+      uniqueDays[year] = []
     }
+    if (uniqueDays[year][month] === undefined) {
+      uniqueDays[year][month] = []
+    }
+    if (dayOfTheWeek < 6 && uniqueDays[year][month][day] === undefined) {
+      helper.year[year][month]["totalHours"] += 8;
+      uniqueDays[year][month][day] = true;
+    }
+    
     helper.year[year][month]["workedMs"] += data.time;
-    helper.year[year][month]['totalHours'] = Object.keys(uniqueDays).length;
+    
     helper.year[year][month][day].push(data);
-    helper.year[year][month]['_children'].push(data)
+    helper.year[year][month]["_children"].push(data);
   });
 
   Promise.all(structuredResponse).then(() => {
@@ -156,7 +168,7 @@ document.addEventListener("DOMContentLoaded", function () {
       layout: "fitDataStretch",
       layoutColumnsOnNewData: true,
       pagination: "local",
-      paginationSize: 100,
+      paginationSize: 150,
       paginationSizeSelector: true,
       groupBy: function (data) {
         const day = helper.getDay(data.startTime);
