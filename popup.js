@@ -84,7 +84,6 @@ function getHourBalance() {
 function getTotalHours() {
   const totalHours =
     helper.year[helper.activeYear][helper.activeMonth]["totalHours"];
-  console.log(helper.year[helper.activeYear][helper.activeMonth]);
   return totalHours;
 }
 function getPercentage() {
@@ -95,15 +94,15 @@ function getPercentage() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-
-
-  document.querySelector('#yearSelector').addEventListener('change', setActiveYear);
-  document.querySelector('#monthSelector').addEventListener('change', setActiveMonth);
+  document
+    .querySelector("#yearSelector")
+    .addEventListener("change", setActiveYear);
+  document
+    .querySelector("#monthSelector")
+    .addEventListener("change", setActiveMonth);
 
   const response = JSON.parse(window.localStorage.getItem("HOURS"));
   const uniqueDays = {};
-
-  console.log(response);
 
   const structuredResponse = response.data.map(function (data) {
     const year = new Date(data.startTime).getUTCFullYear();
@@ -128,36 +127,38 @@ document.addEventListener("DOMContentLoaded", function () {
     if (helper.year[year][month]["totalHours"] === undefined) {
       helper.year[year][month]["totalHours"] = 0;
     }
-    if (helper.year[year][month]['workdays'] === undefined) {
-      helper.year[year][month]['workdays'] = 0;
+    if (helper.year[year][month]["workdays"] === undefined) {
+      helper.year[year][month]["workdays"] = 0;
     }
     if (uniqueDays[year] === undefined) {
-      uniqueDays[year] = []
+      uniqueDays[year] = [];
     }
     if (uniqueDays[year][month] === undefined) {
-      uniqueDays[year][month] = []
+      uniqueDays[year][month] = [];
     }
     if (dayOfTheWeek < 6 && uniqueDays[year][month][day] === undefined) {
       helper.year[year][month]["totalHours"] += 8;
       uniqueDays[year][month][day] = true;
     }
-    
+
     helper.year[year][month]["workedMs"] += data.time;
-    
+
     helper.year[year][month][day].push(data);
     helper.year[year][month]["_children"].push(data);
   });
 
   Promise.all(structuredResponse).then(() => {
-
     setYearSelector();
     setMonthSelector();
     getWorkedHours();
     const overviewTable = document.querySelector(".total-hours");
-    overviewTable.innerHTML = helper.createOverview(getWorkedHours(), getTotalHours(), getHourBalance(), getPercentage());
-  })
-
-
+    overviewTable.innerHTML = helper.createOverview(
+      getWorkedHours(),
+      getTotalHours(),
+      getHourBalance(),
+      getPercentage()
+    );
+  });
 
   let welcomeText = "";
   if (helper.year) {
@@ -257,7 +258,12 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     const overviewTable = document.querySelector(".total-hours");
-    overviewTable.innerHTML = helper.createOverview(getWorkedHours(), getTotalHours(), getHourBalance(), getPercentage());
+    overviewTable.innerHTML = helper.createOverview(
+      getWorkedHours(),
+      getTotalHours(),
+      getHourBalance(),
+      getPercentage()
+    );
     welcomeText = `Welkom ${response.data[0].user.displayName}!`;
     document.querySelector(".welcome").textContent = welcomeText;
   } else {

@@ -100,9 +100,6 @@ const helper = {
         dayValue.split("-")[0]
       }`
     );
-    console.log('dayValue.split("-")[0]: Dag', dayValue.split("-")[0]);
-    console.log('dayValue.split("-")[1]: Maand', dayValue.split("-")[1]);
-    console.log("today", today);
     const dayOfTheWeek = helper.getDayInTheWeek(today);
 
     return `
