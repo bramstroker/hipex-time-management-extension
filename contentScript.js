@@ -65,7 +65,7 @@ function setCurrentWorkedTime(startTime) {
   if (startTimeHoursInMinutes && endTimeHoursInMinutes && dayOfTheWeek < 6) {
     currentWorkedTimeContainer.innerHTML = `${hours}:${
       (minutes < 10 ? "0" : "") + minutes
-    } gewerkt je moet nog: ${retHours}:${
+    } gewerkt je mag nog: ${retHours}:${
       (retMinutes < 10 ? "0" : "") + retMinutes
     }`;
   }
@@ -79,7 +79,7 @@ function setCurrentWorkedTime(startTime) {
       ".currentWorkedTimeContainer"
     ).innerHTML = `${hours}:${
       (minutes < 10 ? "0" : "") + minutes
-    } gewerkt je moet nog: ${retHours}:${
+    } gewerkt je mag nog: ${retHours}:${
       (retMinutes < 10 ? "0" : "") + retMinutes
     }`;
   }
