@@ -54,3 +54,21 @@ body {
 .total-hours {
     margin-top: 0;
 }
+.totalBalanceContainer {
+    display: inline-flex;
+    flex-direction: row;
+    padding: 0;
+    margin-left: 10px;
+    align-items: flex-start;
+    height: auto;
+}
+.totalBalanceText {
+    color: #656363;
+    padding: 4px;
+    border-radius: 4px;
+}
+.totalBalance {
+    color: white;
+    padding: 4px;
+    border-radius: 4px;
+}

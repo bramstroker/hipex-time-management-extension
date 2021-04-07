@@ -52,12 +52,42 @@ function setMonthSelector(silent) {
   }
 }
 function getWorkedHours() {
-  
   const workedHours = helper.setMinutesToHoursAndMinutes(
     helper.year[helper.activeYear][helper.activeMonth]["workedMs"] / 60
   );
-  
+
   return workedHours;
+}
+function getHourBalanceMonth() {
+  let balance = 0;
+  let totalMinutes = 0;
+  let totalHours = 0;
+  const months = helper.year[helper.activeYear];
+  for (let i = 0; i < months.length; i++) {
+    console.log();
+    if (months[i]) {
+      balance += months[i]["workedMs"] / 60;
+      totalHours = months[i]["totalHours"];
+      totalMinutes += totalHours * 60;
+    }
+  }
+  console.log(balance);
+  console.log(totalMinutes);
+
+  if (totalMinutes > balance) {
+    calculation = totalMinutes - balance;
+    result = "negative";
+  } else {
+    calculation = balance - totalMinutes;
+    result = "positive";
+  }
+  document.querySelector(".totalBalance").classList.add(result);
+  document.querySelector(
+    ".totalBalanceText"
+  ).innerHTML = `Totale balans ${helper.activeYear}:`;
+  document.querySelector(".totalBalance").innerHTML = `${
+    result === "negative" ? "-" : ""
+  }${helper.setMinutesToHoursAndMinutes(calculation)} uur`;
 }
 function getHourBalance() {
   const totalHours = helper.year[helper.activeYear][helper.activeMonth]['totalHours'];
@@ -151,6 +181,7 @@ document.addEventListener("DOMContentLoaded", function () {
     setYearSelector();
     setMonthSelector();
     getWorkedHours();
+    getHourBalanceMonth();
     const overviewTable = document.querySelector(".total-hours");
     overviewTable.innerHTML = helper.createOverview(
       getWorkedHours(),

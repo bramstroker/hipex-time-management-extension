@@ -1,11 +1,9 @@
 const helper = {
-  year: {},
-  table: undefined,
   activeMonth: new Date().getMonth(),
-  workingDays: 0,
-  workingHours: 0,
-  sumWorkingHours: undefined,
   activeYear: new Date().getUTCFullYear(),
+  sumWorkingHours: undefined,
+  table: undefined,
+  year: {},
   DAYS_SHORT: ["zo", "ma", "di", "wo", "do", "vr", "za"],
   DAYS_LONG: [
     "zondag",
@@ -84,7 +82,6 @@ const helper = {
       color = `green`;
     }
     if (minutes < 480) {
-      // addition = `<span class="additionSign">-</span>${8 - quarters / 4}`;
       const remainingMinutes = 480 - minutes;
       addition = `<span class="additionSign">-</span>${helper.setMinutesToHoursAndMinutes(
         remainingMinutes
