@@ -44,3 +44,7 @@ select[name='ticket'] {
 .overview-title {
     font-weight: bold;
 }
+
+.ticketLink {
+    text-decoration: underline;
+}

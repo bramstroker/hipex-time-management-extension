@@ -1,13 +1,14 @@
 let tableIsRendered = false;
-const isProcessingElement = document.querySelector('#DataTables_Table_0_processing');
-const observer = new MutationObserver(checkIfTableNeedsToBeRendered)
+const isProcessingElement = document.querySelector(
+  "#DataTables_Table_0_processing"
+);
+const observer = new MutationObserver(checkIfTableNeedsToBeRendered);
 const observerTable = new MutationObserver(redrawTable);
-observer.observe(isProcessingElement, { attributes: true })
+observer.observe(isProcessingElement, { attributes: true });
 observerTable.observe(isProcessingElement, { attributes: true });
 checkIfTableNeedsToBeRendered();
 
-
-window.setInterval(setCurrentWorkedTime,30000); // 30 seconds
+window.setInterval(setCurrentWorkedTime, 30000); // 30 seconds
 
 function setCurrentWorkedTime() {
   const startTime = document.querySelector('[name="start_time"]').value;
@@ -55,8 +56,13 @@ function setCurrentWorkedTime() {
   }
 
   const dayOfTheWeek = helper.getDayInTheWeek(new Date());
-  
-  if (startTimeHoursInMinutes && endTimeHoursInMinutes && dayOfTheWeek < 6 && !isNaN(minutes)) {
+
+  if (
+    startTimeHoursInMinutes &&
+    endTimeHoursInMinutes &&
+    dayOfTheWeek < 6 &&
+    !isNaN(minutes)
+  ) {
     currentWorkedTimeContainer.innerHTML = `${hours}:${
       (minutes < 10 ? "0" : "") + minutes
     } gewerkt je mag nog: ${retHours}:${
@@ -69,9 +75,11 @@ function setCurrentWorkedTime() {
       .querySelector("#time-management")
       .insertBefore(currentWorkedTimeContainer, document.querySelector("hr"));
   } else {
-    document.querySelector(".currentWorkedTimeContainer").innerHTML = '';
+    document.querySelector(".currentWorkedTimeContainer").innerHTML = "";
     if (!isNaN(minutes)) {
-      document.querySelector(".currentWorkedTimeContainer").innerHTML = `${hours}:${
+      document.querySelector(
+        ".currentWorkedTimeContainer"
+      ).innerHTML = `${hours}:${
         (minutes < 10 ? "0" : "") + minutes
       } gewerkt je mag nog: ${retHours}:${
         (retMinutes < 10 ? "0" : "") + retMinutes
@@ -80,21 +88,20 @@ function setCurrentWorkedTime() {
   }
 }
 
-
 function checkIfTableNeedsToBeRendered() {
-    if (!tableIsRendered && isProcessingElement.style.visibility ==='hidden') {
-        helper.getAllData();  
-        setTimeout(() => {
-            renderTable();
-            tableIsRendered = true;
-        }, 500);
-    }
+  if (!tableIsRendered && isProcessingElement.style.visibility === "hidden") {
+    helper.getAllData();
+    setTimeout(() => {
+      renderTable();
+      tableIsRendered = true;
+    }, 500);
+  }
 }
 
 function redrawTable() {
-  helper.getAllData();    
+  helper.getAllData();
   setTimeout(() => {
-      renderTable();
+    renderTable();
   }, 500);
 }
 
@@ -106,21 +113,27 @@ function renderTable() {
   const dayTotal = {};
 
   for (let i = 0; i < rows.length; i++) {
-    
-    if (rows[i].children[1] === undefined || rows[i].children[2] === undefined) {
-      return // check if row has children
+    if (
+      rows[i].children[1] === undefined ||
+      rows[i].children[2] === undefined
+    ) {
+      return; // check if row has children
     }
 
     const from = rows[i].children[1];
     const till = rows[i].children[2];
     const timeWorked = rows[i].children[3];
+    const ticketNumber = rows[i].children[7];
+
     let amountOfHours,
       amountOfSeconds = 0;
     if (timeWorked) {
-      amountOfHours =
-        parseInt(timeWorked.innerText.split(":")[0]) * 60 * 60;
-      amountOfSeconds =
-        parseInt(timeWorked.innerText.split(":")[1]) * 60;
+      amountOfHours = parseInt(timeWorked.innerText.split(":")[0]) * 60 * 60;
+      amountOfSeconds = parseInt(timeWorked.innerText.split(":")[1]) * 60;
+    }
+
+    if (ticketNumber.innerText !== "0") {
+      ticketNumber.innerHTML = `<a href="https://support.emico.nl/issues/${ticketNumber.innerText}" class="ticketLink" target="_blank">${ticketNumber.innerText}</a>`;
     }
 
     const totalInSeconds = amountOfHours + amountOfSeconds;
@@ -155,14 +168,12 @@ function renderTable() {
   const rowDays = document.querySelectorAll("[data-day]");
   for (let i = 0; i < rowDays.length; i++) {
     const dataDay = rowDays[i].getAttribute("data-day");
-    document.querySelector(
-      `[data-day='${dataDay}']`
-    ).innerHTML = helper.getTimeInHoursAndMinutes(dayTotal[dataDay], dataDay);
+    document.querySelector(`[data-day='${dataDay}']`).innerHTML =
+      helper.getTimeInHoursAndMinutes(dayTotal[dataDay], dataDay);
   }
 
   setCurrentWorkedTime();
 }
-
 
 // Hide elements (Options_page)
 chrome.storage.local.get(
@@ -182,4 +193,3 @@ chrome.storage.local.get(
     }
   }
 );
-

@@ -1,54 +1,70 @@
-helper.getAllData(); 
+helper.getAllData();
 
 function setActiveYear(e) {
   helper.activeYear = e.target.value;
-  setMonthSelector(true)
-  helper.table.setData(helper.year[helper.activeYear][helper.activeMonth]['_children']);
+  setMonthSelector(true);
+  helper.table.setData(
+    helper.year[helper.activeYear][helper.activeMonth]["_children"]
+  );
   const overviewTable = document.querySelector(".total-hours");
-  overviewTable.innerHTML = helper.createOverview(getWorkedHours(), getTotalHours(), getHourBalance(), getPercentage());
+  overviewTable.innerHTML = helper.createOverview(
+    getWorkedHours(),
+    getTotalHours(),
+    getHourBalance(),
+    getPercentage()
+  );
 }
 
 function setActiveMonth(e) {
   helper.activeMonth = e.target.value;
-  helper.table.setData(helper.year[helper.activeYear][helper.activeMonth]['_children']);
+  helper.table.setData(
+    helper.year[helper.activeYear][helper.activeMonth]["_children"]
+  );
   const overviewTable = document.querySelector(".total-hours");
-  overviewTable.innerHTML = helper.createOverview(getWorkedHours(), getTotalHours(), getHourBalance(), getPercentage());
+  overviewTable.innerHTML = helper.createOverview(
+    getWorkedHours(),
+    getTotalHours(),
+    getHourBalance(),
+    getPercentage()
+  );
 }
 
 function resetYearSelector() {
-  document.querySelector('#yearSelector').innerHTML = '';
+  document.querySelector("#yearSelector").innerHTML = "";
 }
 function setYearSelector() {
   resetMonthSelector();
   Object.keys(helper.year).map(function (year) {
-    let option = document.createElement('option');
+    let option = document.createElement("option");
     option.value = year;
     option.text = year;
-    option.selected = !!(year == helper.activeYear)
-    document.querySelector('#yearSelector').appendChild(option)
-  })
-  if (document.querySelector('#yearSelector').children.length === 1) {
-    document.querySelector('#yearSelector').disabled = true;
+    option.selected = !!(year == helper.activeYear);
+    document.querySelector("#yearSelector").appendChild(option);
+  });
+  if (document.querySelector("#yearSelector").children.length === 1) {
+    document.querySelector("#yearSelector").disabled = true;
   }
 }
 function resetMonthSelector() {
-  document.querySelector('#monthSelector').innerHTML = '';
+  document.querySelector("#monthSelector").innerHTML = "";
 }
 function setMonthSelector(silent) {
   resetMonthSelector();
   Object.keys(helper.year[helper.activeYear]).map(function (month) {
-    let option = document.createElement('option');
+    let option = document.createElement("option");
     option.value = month;
     option.text = helper.MONTHS_LONG[month];
-    option.selected = !!(month == helper.activeMonth)
-    document.querySelector('#monthSelector').appendChild(option)
-  })
+    option.selected = !!(month == helper.activeMonth);
+    document.querySelector("#monthSelector").appendChild(option);
+  });
   if (silent) {
-    document.querySelector('#monthSelector option:last-child').selected = true;
-    helper.activeMonth = document.querySelector('#monthSelector option:last-child').value;
+    document.querySelector("#monthSelector option:last-child").selected = true;
+    helper.activeMonth = document.querySelector(
+      "#monthSelector option:last-child"
+    ).value;
   }
-  if (document.querySelector('#monthSelector').children.length === 1) {
-    document.querySelector('#monthSelector').disabled = true;
+  if (document.querySelector("#monthSelector").children.length === 1) {
+    document.querySelector("#monthSelector").disabled = true;
   }
 }
 function getWorkedHours() {
@@ -60,13 +76,16 @@ function getWorkedHours() {
 }
 function getHourBalanceMonth() {
   let balance = 0;
+  let freeTimeTaken = 0;
   let totalMinutes = 0;
   let totalHours = 0;
   const months = helper.year[helper.activeYear];
   for (let i = 0; i < months.length; i++) {
     console.log();
     if (months[i]) {
+      console.log(months[i]);
       balance += months[i]["workedMs"] / 60;
+      freeTimeTaken += months[i]["freeTimeTaken"] / 60;
       totalHours = months[i]["totalHours"];
       totalMinutes += totalHours * 60;
     }
@@ -88,9 +107,17 @@ function getHourBalanceMonth() {
   document.querySelector(".totalBalance").innerHTML = `${
     result === "negative" ? "-" : ""
   }${helper.setMinutesToHoursAndMinutes(calculation)} uur`;
+
+  document.querySelector(
+    ".totalFreeTimeTakenText"
+  ).innerHTML = `Totaal aantal uur vrijgenomen: `;
+  document.querySelector(
+    ".totalFreeTimeTaken"
+  ).innerHTML = `${helper.setMinutesToHoursAndMinutes(freeTimeTaken)} uur`;
 }
 function getHourBalance() {
-  const totalHours = helper.year[helper.activeYear][helper.activeMonth]['totalHours'];
+  const totalHours =
+    helper.year[helper.activeYear][helper.activeMonth]["totalHours"];
   const totalMinutes = totalHours * 60;
   const workedMs =
     helper.year[helper.activeYear][helper.activeMonth]["workedMs"] / 60;
@@ -109,7 +136,7 @@ function getHourBalance() {
   return {
     calculation: helper.setMinutesToHoursAndMinutes(calculation),
     result: result,
-  }; 
+  };
 }
 function getTotalHours() {
   const totalHours =
@@ -117,8 +144,10 @@ function getTotalHours() {
   return totalHours;
 }
 function getPercentage() {
-  const workedHours = helper.year[helper.activeYear][helper.activeMonth]['workedMs'] / 3600;
-  const totalHours = helper.year[helper.activeYear][helper.activeMonth]['totalHours']; // todo
+  const workedHours =
+    helper.year[helper.activeYear][helper.activeMonth]["workedMs"] / 3600;
+  const totalHours =
+    helper.year[helper.activeYear][helper.activeMonth]["totalHours"]; // todo
   const percentage = Math.floor((100 * workedHours) / totalHours);
   return percentage;
 }
@@ -154,6 +183,9 @@ document.addEventListener("DOMContentLoaded", function () {
     if (helper.year[year][month]["workedMs"] === undefined) {
       helper.year[year][month]["workedMs"] = 0;
     }
+    if (helper.year[year][month]["freeTimeTaken"] === undefined) {
+      helper.year[year][month]["freeTimeTaken"] = 0;
+    }
     if (helper.year[year][month]["totalHours"] === undefined) {
       helper.year[year][month]["totalHours"] = 0;
     }
@@ -172,6 +204,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     helper.year[year][month]["workedMs"] += data.time;
+
+    if (data.customer.id === 1) {
+      console.log(data.time);
+      helper.year[year][month]["freeTimeTaken"] += data.time;
+    }
 
     helper.year[year][month][day].push(data);
     helper.year[year][month]["_children"].push(data);
@@ -298,7 +335,7 @@ document.addEventListener("DOMContentLoaded", function () {
     welcomeText = `Welkom ${response.data[0].user.displayName}!`;
     document.querySelector(".welcome").textContent = welcomeText;
   } else {
-    welcomeText = `Log eerst in op https://service.hipex.io/`;
+    welcomeText = `Log eerst in op https://service.emico.nl/`;
     document.querySelector(".welcome").textContent = welcomeText;
   }
 
