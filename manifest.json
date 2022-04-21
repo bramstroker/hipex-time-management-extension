@@ -20,7 +20,7 @@
     "16": "hipex.png",
     "128": "hipex.png"
   },
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "Emico time management tool",
   "options_ui": {
     "open_in_tab": false,
